@@ -33,6 +33,9 @@ class CreateListingsTable extends Migration
      */
     public function down()
     {
+        Schema::table('tasks', function (Blueprint $table) {
+           $table->dropColumn('listing_id');
+        });
         Schema::dropIfExists('listings');
     }
 

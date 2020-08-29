@@ -4,6 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static find($listing_id)
+ * @property User user
+ * @property int id
+ * @property string name
+ */
 class Listing extends Model
 {
     public function user()
@@ -15,4 +21,8 @@ class Listing extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    protected $fillable = [
+        'name'
+    ];
 }
