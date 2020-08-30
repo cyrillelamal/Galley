@@ -42,11 +42,15 @@ class TaskPolicy
      * Determine whether the user can update the task.
      *
      * @param User $user
-     * @param Task $task
+     * @param Task|null $task
      * @return mixed
      */
-    public function update(User $user, Task $task)
+    public function update(User $user, ?Task $task)
     {
+        if (null === $task) {
+            return true;
+        }
+
         return $this->isOwner($user, $task);
     }
 

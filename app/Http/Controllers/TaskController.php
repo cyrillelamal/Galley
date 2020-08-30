@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Listing;
 use App\Task;
 use App\User;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -97,7 +98,11 @@ class TaskController extends Controller
             // The listing owner is checked here.
             Gate::authorize('update', $listing);
 
-            $task->listing()->associate($listing);
+            if (null === $listing) {
+                $task->listing()->dissociate();
+            } else {
+                $task->listing()->associate($listing);
+            }
         }
 
         $task->update($data);
@@ -108,11 +113,14 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param Task $task
      * @return Response
+     * @throws Exception
      */
-    public function destroy($id)
+    public function destroy(Task $task)
     {
-        //
+        $task->delete();
+
+        return \response(null, 200);
     }
 }
