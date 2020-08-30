@@ -5,22 +5,35 @@ namespace App\Http\Controllers;
 use App\Listing;
 use App\Task;
 use App\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
+/**
+ * The controller uses "Resource Controller Policy".
+ * Watch out the constructor.
+ */
 class TaskController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Task::class, 'task');
+    }
+
     /**
      * Read all tasks
      *
-     * @return Response
+     * @return Collection
      */
     public function index()
     {
-        dd('index task');
+        /** @var User $user */
+        $user = Auth::user();
+
+        return $user->tasks;
     }
 
     /**
@@ -60,24 +73,24 @@ class TaskController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specific task.
      *
-     * @param int $id
-     * @return Response
+     * @param Task $task
+     * @return Task
      */
-    public function show($id)
+    public function show(Task $task)
     {
-        //
+        return $task;
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified task in storage.
      *
      * @param Request $request
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Task $task)
     {
         //
     }

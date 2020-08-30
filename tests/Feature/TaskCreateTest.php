@@ -30,6 +30,16 @@ class TaskCreateTest extends TestCase
     }
 
     /**
+     * Unauthenticated users cannot create any tasks.
+     */
+    public function testUnauthorizedUserError()
+    {
+        $response = $this->postJson(self::URI, $this->getRequestData(), $this->getRequestHeaders());
+
+        $response->assertStatus(401);
+    }
+
+    /**
      * Create a task that doesn't belong to any listing.
      */
     public function testCreateTaskWithoutList(): void
@@ -48,6 +58,7 @@ class TaskCreateTest extends TestCase
         /** @var Task $task */
         $task = Task::find($response['id']);
 
+        $this->assertNotNull($task);
         $this->assertNull($task->listing, "Task is attached to a list.");
     }
 

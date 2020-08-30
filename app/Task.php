@@ -26,10 +26,14 @@ class Task extends Model
     }
 
     protected $dates = [
-        'expires_at'
+        'expires_at',
     ];
 
     protected $fillable = [
         'body', 'expires_at',
+    ];
+
+    protected $hidden = [
+        'user',
     ];
 }
