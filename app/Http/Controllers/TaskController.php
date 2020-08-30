@@ -44,11 +44,7 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'body' => ['required', 'max:511'],
-            'expires_at' => ['nullable', 'date'],
-//            'listing_id' => ['sometimes', 'exists:listings,id']
-        ]);
+        $data = $request->validate(Task::getValidationRules());
 
         $task = new Task($data);
 
@@ -87,12 +83,26 @@ class TaskController extends Controller
      * Update the specified task in storage.
      *
      * @param Request $request
-     * @param int $id
-     * @return Response
+     * @param Task $task
+     * @return Task
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $data = $request->validate(Task::getValidationRules(true));
+
+        if ($request->has('listing_id')) {
+            $listing = Listing::findOrFail($request->input('listing_id'));
+
+            // The task owner is checked already.
+            // The listing owner is checked here.
+            Gate::authorize('update', $listing);
+
+            $task->listing()->associate($listing);
+        }
+
+        $task->update($data);
+
+        return $task; // 200
     }
 
     /**

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @method static find($listing_id)
+ * @method static Listing findOrFail(int $param)
  * @property User user
  * @property int id
  * @property string name

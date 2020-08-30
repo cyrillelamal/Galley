@@ -47,11 +47,11 @@ class TaskPolicy
      */
     public function update(User $user, Task $task)
     {
-        //
+        return $this->isOwner($user, $task);
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Determine whether the user can delete the task.
      *
      * @param User $user
      * @param Task $task
@@ -59,31 +59,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task)
     {
-        //
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param User $user
-     * @param Task $task
-     * @return mixed
-     */
-    public function restore(User $user, Task $task)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param User $user
-     * @param Task $task
-     * @return mixed
-     */
-    public function forceDelete(User $user, Task $task)
-    {
-        //
+        return $this->isOwner($user, $task);
     }
 
     private function isOwner(User $user, Task $task): bool
