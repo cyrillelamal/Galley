@@ -23,6 +23,21 @@ class Listing extends Model
         return $this->hasMany(Task::class);
     }
 
+    public static function getValidationRules(bool $update = false): array
+    {
+        $rules =  [
+            'name' => ['required', 'max:127'],
+        ];
+
+        if ($update) {
+            foreach ($rules as $field => &$ruleSet) {
+                array_unshift($ruleSet, 'sometimes');
+            }
+        }
+
+        return $rules;
+    }
+
     protected $fillable = [
         'name'
     ];

@@ -10,8 +10,13 @@ class ListingPolicy
 {
     use HandlesAuthorization;
 
+    public function viewAny(User $user)
+    {
+        return (bool)$user;
+    }
+
     /**
-     * Determine whether the user can view the model.
+     * Determine whether the user can view the listing.
      *
      * @param User $user
      * @param Listing $listing
@@ -23,19 +28,34 @@ class ListingPolicy
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Determine whether the user can create listings.
      *
      * @param User $user
-     * @param Listing $listing
      * @return mixed
      */
-    public function update(User $user, Listing $listing)
+    public function create(User $user)
     {
+        return (bool)$user;
+    }
+
+    /**
+     * Determine whether the user can update the listing.
+     *
+     * @param User $user
+     * @param Listing|null $listing
+     * @return mixed
+     */
+    public function update(User $user, ?Listing $listing)
+    {
+        if (null === $listing) {
+            return true;
+        }
+
         return $this->isOwner($user, $listing);
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Determine whether the user can delete the listing.
      *
      * @param User $user
      * @param Listing $listing
