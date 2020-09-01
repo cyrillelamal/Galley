@@ -9,3 +9,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('listings', 'ListingController');
 });
+
+Route::get('reflect_user', 'UserController@reflectUser');
