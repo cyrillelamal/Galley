@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 
 class Login extends React.Component {
     constructor(props) {
@@ -19,8 +20,7 @@ class Login extends React.Component {
     }
 
     loadCsrfCookie() {
-        axios.get('/sanctum/csrf-cookie')
-            .then(res => console.log(res))
+        axios.get('/sanctum/csrf-cookie').then()
     }
 
     handleChange({target}) {
@@ -31,9 +31,29 @@ class Login extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault()
+
+        const {email, password} = this.state
+
+        const data = {email, password}
+
+        axios.post('/login', data).then(res => {
+            if (res.status === 204) {
+                const {setUser} = this.context
+
+                setUser(true)
+            }
+        })
     }
 
     render() {
+        const {user} = this.context
+
+        if (user) {
+            return (
+                <Redirect to={'/tasks'}/>
+            )
+        }
+
         return (
             <section className="hero is-info is-fullheight">
                 <div className="hero-body">
@@ -45,10 +65,11 @@ class Login extends React.Component {
                                 </p>
                             </header>
                             <div className="card-content">
+
                                 <form action="" method="post" onSubmit={this.handleSubmit}>
                                     {/* identifier */}
                                     <div className="field">
-                                        <p className="control has-icons-left has-icons-right">
+                                        <p className="control has-icons-left">
                                             <input
                                                 className="input" type="email" placeholder="Email"
                                                 name="email"
@@ -58,14 +79,11 @@ class Login extends React.Component {
                                             <span className="icon is-small is-left">
                                                 <i className="fas fa-envelope"/>
                                             </span>
-                                            <span className="icon is-small is-right">
-                                                <i className="fas fa-check"/>
-                                            </span>
                                         </p>
                                     </div>
                                     {/* password */}
                                     <div className="field">
-                                        <p className="control has-icons-left has-icons-right">
+                                        <p className="control has-icons-left">
                                             <input
                                                 className="input" type="password" placeholder="Password"
                                                 name="password"
@@ -73,35 +91,42 @@ class Login extends React.Component {
                                                 onChange={this.handleChange}
                                             />
                                             <span className="icon is-small is-left">
-                                                <i className="fas fa-envelope"/>
-                                            </span>
-                                            <span className="icon is-small is-right">
                                                 <i className="fas fa-unlock"/>
                                             </span>
                                         </p>
                                     </div>
                                     {/* submit */}
-                                    <div className="field has-text-left">
+                                    <div className="field">
                                         <p className="control">
                                             <button className="button is-success" role="submit">
-                                                Log in
+                                                Login
                                             </button>
                                         </p>
                                     </div>
-
                                 </form>
+
                             </div>
-                            {/*<footer className="card-footer">*/}
-                            {/*    <div className="card-footer-item">*/}
-                            {/*        <Link to={'/signup'}>Or sign up</Link>*/}
-                            {/*    </div>*/}
-                            {/*</footer>*/}
                         </div>
                     </div>
+                </div>
+                <div className="hero-foot">
+                    <nav className="tabs is-boxed is-fullwidth">
+                        <div className="container">
+                            <ul>
+                                <li>
+                                    <Link to={'/signup'} className="button is-info">
+                                        Or sign up
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
                 </div>
             </section>
         );
     }
 }
+
+Login.contextType = UserContext
 
 export default Login

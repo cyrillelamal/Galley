@@ -11,6 +11,8 @@ class App extends React.Component {
             loading: true,
             user: null
         }
+
+        this.setUser = (user) => this.setState({user})
     }
 
     loadUser() {
@@ -32,9 +34,14 @@ class App extends React.Component {
             )
         }
 
+        const contextValue = {
+            user: this.state.user,
+            setUser: this.setUser
+        }
+
         return (
-            <UserContext.Provider value={this.state.user}>
-                <Main/>
+            <UserContext.Provider value={contextValue}>
+                    <Main/>
             </UserContext.Provider>
         )
     }

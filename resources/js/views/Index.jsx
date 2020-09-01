@@ -4,11 +4,14 @@ import {Link, Redirect} from "react-router-dom";
 
 class Index extends React.Component {
     render() {
-        if (this.context) {
+        const {user} = this.context
+
+        if (user) {
             return (
                 <Redirect to={'/tasks'}/>
             )
         }
+
         return (
             <section className="hero is-info is-fullheight">
                 <div className="hero-body">

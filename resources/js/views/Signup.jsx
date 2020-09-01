@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
+import UserContext from "../contexts/UserContext";
 
 class Signup extends React.Component {
     constructor(props) {
@@ -8,7 +9,9 @@ class Signup extends React.Component {
         this.state = {
             email: '',
             password: '',
-            passwordRepeat: ''
+            password_confirmation: '',
+
+            passwordsDiffer: false
         }
 
         this.handleChange = this.handleChange.bind(this)
@@ -21,20 +24,50 @@ class Signup extends React.Component {
 
     loadCsrfCookie() {
         axios.get('/sanctum/csrf-cookie')
-            .then(res => console.log(res))
     }
 
     handleChange({target}) {
         const {name, value} = target
 
-        this.setState({[name]: value})
+        this.setState((state) => {
+            let newState = {
+                [name]: value
+            }
+
+            if (state.passwordsDiffer && name !== 'email') {
+                newState.passwordsDiffer = false
+            }
+
+            return newState
+        })
     }
 
     handleSubmit(e) {
         e.preventDefault()
+
+        const {email, password, password_confirmation} = this.state
+
+        if (password !== password_confirmation) {
+            this.setState({passwordsDiffer: true})
+            return null
+        }
+
+        const data = {email, password, password_confirmation}
+
+        axios.post('/register', data)
+            .then(res => console.log(res))
+            .catch(reason => console.error(reason))
     }
 
     render() {
+        const {user} = this.context
+
+        if (user) {
+            return (
+                <Redirect to={'/tasks'}/>
+            )
+        }
+
         return (
             <section className="hero is-info is-fullheight">
                 <div className="hero-body">
@@ -49,43 +82,43 @@ class Signup extends React.Component {
                                 <form action="" method="post" onSubmit={this.handleSubmit}>
                                     {/* identifier */}
                                     <div className="field">
-                                        <p className="control has-icons-left has-icons-right">
-                                            <input className="input" type="email" placeholder="Email"/>
+                                        <p className="control has-icons-left">
+                                            <input
+                                                className="input" type="email" placeholder="Email"
+                                                name="email" value={this.state.email}
+                                                onChange={this.handleChange}
+                                            />
                                             <span className="icon is-small is-left">
                                                 <i className="fas fa-envelope"/>
-                                            </span>
-                                            <span className="icon is-small is-right">
-                                                <i className="fas fa-check"/>
                                             </span>
                                         </p>
                                     </div>
                                     {/* password */}
+                                    {this.state.passwordsDiffer && (
+                                        <div className="notification is-danger">
+                                            Passwords differ
+                                        </div>
+                                    )}
                                     <div className="field">
-                                        <p className="control has-icons-left has-icons-right">
+                                        <p className="control has-icons-left">
                                             <input
                                                 className="input" type="password" placeholder="Password"
                                                 name="password" value={this.state.password}
                                                 onChange={this.handleChange}
                                             />
                                             <span className="icon is-small is-left">
-                                                <i className="fas fa-envelope"/>
-                                            </span>
-                                            <span className="icon is-small is-right">
                                                 <i className="fas fa-unlock"/>
                                             </span>
                                         </p>
                                     </div>
                                     <div className="field">
-                                        <p className="control has-icons-left has-icons-right">
+                                        <p className="control has-icons-left">
                                             <input
                                                 className="input" type="password" placeholder="Repeat your password"
-                                                name="passwordRepeat" value={this.state.passwordRepeat}
+                                                name="password_confirmation" value={this.state.password_confirmation}
                                                 onChange={this.handleChange}
                                             />
                                             <span className="icon is-small is-left">
-                                                <i className="fas fa-envelope"/>
-                                            </span>
-                                            <span className="icon is-small is-right">
                                                 <i className="fas fa-unlock"/>
                                             </span>
                                         </p>
@@ -94,24 +127,34 @@ class Signup extends React.Component {
                                     <div className="field has-text-left">
                                         <p className="control">
                                             <button className="button is-success">
-                                                Sign ip
+                                                Sign up
                                             </button>
                                         </p>
                                     </div>
 
                                 </form>
                             </div>
-                            {/*<footer className="card-footer">*/}
-                            {/*    <div className="card-footer-item">*/}
-                            {/*        <Link to={'/signup'}>Or sign up</Link>*/}
-                            {/*    </div>*/}
-                            {/*</footer>*/}
                         </div>
                     </div>
+                </div>
+                <div className="hero-foot">
+                    <nav className="tabs is-boxed is-fullwidth">
+                        <div className="container">
+                            <ul>
+                                <li>
+                                    <Link to={'/login'} className="button is-info">
+                                        Or login
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
                 </div>
             </section>
         );
     }
 }
+
+Signup.contextType = UserContext
 
 export default Signup
