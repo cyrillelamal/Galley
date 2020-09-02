@@ -7,6 +7,7 @@ import TaskForm from "../components/TaskForm";
 import Sorting from "../components/Sorting";
 import Listing from "../components/Listing";
 import ListingForm from "../components/ListingForm";
+import Logout from "../components/Logout";
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -23,15 +24,10 @@ class Dashboard extends React.Component {
 
             currentListingId: nullListing.id,
 
-            sorting: {
-                by: 'expires_at',
-                order: 'asc'
-            },
-
             removingListings: false
         }
 
-        this.setSorting = this.setSorting.bind(this)
+        this.setTasks = this.setTasks.bind(this)
         this.addTask = this.addTask.bind(this)
         this.removeTask = this.removeTask.bind(this)
         this.addListing = this.addListing.bind(this)
@@ -62,8 +58,8 @@ class Dashboard extends React.Component {
             }))
     }
 
-    setSorting(sorting) {
-        this.setState({sorting})
+    setTasks(tasks) {
+        this.setState({tasks})
     }
 
     addTask(task) {
@@ -166,6 +162,7 @@ class Dashboard extends React.Component {
                 <div className="container is-fullwidth">
                     <div className="columns">
                         <div className="column is-3">
+                            <Logout />
                             <ListingForm addListing={this.addListing}/>
                             <nav className={this.state.removingListings
                                 ? "panel mt-2 is-danger"
@@ -180,12 +177,12 @@ class Dashboard extends React.Component {
                             </nav>
                         </div>
                         <div className="column is-9">
-                            <Sorting setSorting={this.setSorting}/>
                             <TaskForm
                                 addTask={this.addTask}
                                 currentListingId={this.state.currentListingId}
                                 listings={this.state.listings}
                             />
+                            <Sorting setTasks={this.setTasks} tasks={this.state.tasks}/>
                             {tasks}
                         </div>
                     </div>
