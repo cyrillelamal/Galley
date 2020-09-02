@@ -25,10 +25,7 @@ class TaskForm extends React.Component {
 
         const {body, expires_at, listing_id} = this.state
 
-        let data = {body, expires_at}
-        if (listing_id !== '') {
-            data.listing_id = listing_id
-        }
+        let data = {body, expires_at, listing_id}
 
         axios.post('/api/tasks', data).then(res => {
             if (res.status === 201) {
@@ -90,7 +87,6 @@ class TaskForm extends React.Component {
                                                 value={this.state.listing_id}
                                                 onChange={this.handleChange}
                                             >
-                                                <option value="">No listing</option>
                                                 {options}
                                             </select>
                                         </div>

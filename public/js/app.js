@@ -58904,20 +58904,17 @@ var Listing = /*#__PURE__*/function (_React$Component) {
   _createClass(Listing, [{
     key: "handleClick",
     value: function handleClick(e) {
-      var _this2 = this;
-
       e.preventDefault();
-      var action = e.target.dataset.action;
       var id = this.props.listing.id;
 
-      if (action === 'read') {
+      if (this.props.removingListings) {
+        if (id === -1) {
+          return null;
+        }
+
+        this.props.removeListing(this.props.listing);
+      } else {
         this.props.setCurrentListingId(id);
-      } else if (action === 'delete') {
-        axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]("/api/listings/".concat(id)).then(function (res) {
-          if (res.status === 200) {
-            _this2.props.removeListing(_this2.props.listing);
-          }
-        });
       }
     }
   }, {
@@ -58927,7 +58924,6 @@ var Listing = /*#__PURE__*/function (_React$Component) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "",
         className: "panel-block",
-        "data-action": "read",
         onClick: this.handleClick
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "panel-icon"
@@ -59492,13 +59488,9 @@ var TaskForm = /*#__PURE__*/function (_React$Component) {
           listing_id = _this$state.listing_id;
       var data = {
         body: body,
-        expires_at: expires_at
+        expires_at: expires_at,
+        listing_id: listing_id
       };
-
-      if (listing_id !== '') {
-        data.listing_id = listing_id;
-      }
-
       axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/tasks', data).then(function (res) {
         if (res.status === 201) {
           _this2.clearForm();
@@ -59569,9 +59561,7 @@ var TaskForm = /*#__PURE__*/function (_React$Component) {
         name: "listing_id",
         value: this.state.listing_id,
         onChange: this.handleChange
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-        value: ""
-      }, "No listing"), options)))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, options)))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "field"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "control"
@@ -59694,7 +59684,8 @@ var Dashboard = /*#__PURE__*/function (_React$Component) {
       sorting: {
         by: 'expires_at',
         order: 'asc'
-      }
+      },
+      removingListings: false
     };
     _this.setSorting = _this.setSorting.bind(_assertThisInitialized(_this));
     _this.addTask = _this.addTask.bind(_assertThisInitialized(_this));
@@ -59702,6 +59693,7 @@ var Dashboard = /*#__PURE__*/function (_React$Component) {
     _this.addListing = _this.addListing.bind(_assertThisInitialized(_this));
     _this.removeListing = _this.removeListing.bind(_assertThisInitialized(_this));
     _this.setCurrentListingId = _this.setCurrentListingId.bind(_assertThisInitialized(_this));
+    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -59788,12 +59780,16 @@ var Dashboard = /*#__PURE__*/function (_React$Component) {
       var _this5 = this;
 
       var id = listing.id;
-      axios__WEBPACK_IMPORTED_MODULE_3___default.a["delete"]("/api/tasks/".concat(id)).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_3___default.a["delete"]("/api/listings/".concat(id)).then(function (res) {
         if (res.status === 200) {
           _this5.setState(function (state) {
             return {
               listings: state.listings.filter(function (l) {
                 return l.id !== id;
+              }),
+              tasks: state.tasks.filter(function (_ref) {
+                var listing_id = _ref.listing_id;
+                return listing_id !== id;
               })
             };
           });
@@ -59805,6 +59801,16 @@ var Dashboard = /*#__PURE__*/function (_React$Component) {
     value: function setCurrentListingId(id) {
       this.setState({
         currentListingId: id
+      });
+    }
+  }, {
+    key: "handleClick",
+    value: function handleClick(e) {
+      e.preventDefault();
+      this.setState(function (state) {
+        return {
+          removingListings: !state.removingListings
+        };
       });
     }
   }, {
@@ -59825,11 +59831,12 @@ var Dashboard = /*#__PURE__*/function (_React$Component) {
           key: l.id,
           listing: l,
           removeListing: _this6.removeListing,
-          setCurrentListingId: _this6.setCurrentListingId
+          setCurrentListingId: _this6.setCurrentListingId,
+          removingListings: _this6.state.removingListings
         });
       });
-      var tasks = this.state.tasks.filter(function (_ref) {
-        var listing_id = _ref.listing_id;
+      var tasks = this.state.tasks.filter(function (_ref2) {
+        var listing_id = _ref2.listing_id;
         return _this6.state.currentListingId === -1 || listing_id === _this6.state.currentListingId;
       }).map(function (task) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Task__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -59838,6 +59845,10 @@ var Dashboard = /*#__PURE__*/function (_React$Component) {
           removeTask: _this6.removeTask
         });
       });
+      var listingButton = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: this.state.removingListings ? "button is-danger" : "button is-warning",
+        onClick: this.handleClick
+      }, this.state.removingListings ? 'Stop deleting' : "Start removing listings");
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
         className: "section"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -59849,10 +59860,12 @@ var Dashboard = /*#__PURE__*/function (_React$Component) {
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_ListingForm__WEBPACK_IMPORTED_MODULE_8__["default"], {
         addListing: this.addListing
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
-        className: "panel mt-2"
+        className: this.state.removingListings ? "panel mt-2 is-danger" : "panel mt-2"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
         className: "panel-heading"
-      }, "Listings"), listings)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "Listings ", this.state.removingListings && "(removing)"), listings, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "panel-block"
+      }, listingButton))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "column is-9"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Sorting__WEBPACK_IMPORTED_MODULE_6__["default"], {
         setSorting: this.setSorting

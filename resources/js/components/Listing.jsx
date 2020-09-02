@@ -11,19 +11,15 @@ class Listing extends React.Component {
     handleClick(e) {
         e.preventDefault()
 
-        const action = e.target.dataset.action
-
         const {id} = this.props.listing
 
-        if (action === 'read') {
+        if (this.props.removingListings) {
+            if (id === -1) {
+                return null
+            }
+            this.props.removeListing(this.props.listing)
+        } else {
             this.props.setCurrentListingId(id)
-        } else if (action === 'delete') {
-            axios.delete(`/api/listings/${id}`)
-                .then(res => {
-                    if (res.status === 200) {
-                        this.props.removeListing(this.props.listing)
-                    }
-                })
         }
     }
 
@@ -31,7 +27,7 @@ class Listing extends React.Component {
         const {name} = this.props.listing
 
         return (
-            <a href="" className="panel-block" data-action="read" onClick={this.handleClick}>
+            <a href="" className="panel-block" onClick={this.handleClick}>
                 <span className="panel-icon">
                   <i className="fas fa-book" aria-hidden="true"/>
                 </span>

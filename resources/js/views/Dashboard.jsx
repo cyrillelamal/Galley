@@ -26,7 +26,9 @@ class Dashboard extends React.Component {
             sorting: {
                 by: 'expires_at',
                 order: 'asc'
-            }
+            },
+
+            removingListings: false
         }
 
         this.setSorting = this.setSorting.bind(this)
@@ -35,6 +37,8 @@ class Dashboard extends React.Component {
         this.addListing = this.addListing.bind(this)
         this.removeListing = this.removeListing.bind(this)
         this.setCurrentListingId = this.setCurrentListingId.bind(this)
+
+        this.handleClick = this.handleClick.bind(this)
     }
 
     componentDidMount() {
@@ -97,12 +101,13 @@ class Dashboard extends React.Component {
     removeListing(listing) {
         const {id} = listing
 
-        axios.delete(`/api/tasks/${id}`)
+        axios.delete(`/api/listings/${id}`)
             .then(res => {
                     if (res.status === 200) {
                         this.setState((state) => {
                             return {
-                                listings: state.listings.filter(l => l.id !== id)
+                                listings: state.listings.filter(l => l.id !== id),
+                                tasks: state.tasks.filter(({listing_id}) => listing_id !== id)
                             }
                         })
                     }
@@ -112,6 +117,16 @@ class Dashboard extends React.Component {
 
     setCurrentListingId(id) {
         this.setState({currentListingId: id})
+    }
+
+    handleClick(e) {
+        e.preventDefault()
+
+        this.setState((state) => {
+            return {
+                removingListings: !state.removingListings
+            }
+        })
     }
 
     render() {
@@ -125,6 +140,7 @@ class Dashboard extends React.Component {
                 key={l.id} listing={l}
                 removeListing={this.removeListing}
                 setCurrentListingId={this.setCurrentListingId}
+                removingListings={this.state.removingListings}
             />
         ))
 
@@ -138,17 +154,29 @@ class Dashboard extends React.Component {
                 />
             ))
 
+        const listingButton = <button
+            className={this.state.removingListings ? "button is-danger" : "button is-warning"}
+            onClick={this.handleClick}
+        >
+            {this.state.removingListings ? 'Stop deleting' : "Start removing listings"}
+        </button>
+
         return (
             <section className="section">
                 <div className="container is-fullwidth">
                     <div className="columns">
                         <div className="column is-3">
                             <ListingForm addListing={this.addListing}/>
-                            <nav className="panel mt-2">
+                            <nav className={this.state.removingListings
+                                ? "panel mt-2 is-danger"
+                                : "panel mt-2"}>
                                 <p className="panel-heading">
-                                    Listings
+                                    Listings {this.state.removingListings && "(removing)"}
                                 </p>
                                 {listings}
+                                <div className="panel-block">
+                                    {listingButton}
+                                </div>
                             </nav>
                         </div>
                         <div className="column is-9">
