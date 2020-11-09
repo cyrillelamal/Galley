@@ -10,6 +10,14 @@ It uses Laravel and React.
 `php artisan db:seed`
 2. Run all test
 `php artisan test` 
+> Before seed the database you have to have a database with migrations,
+> so create it and run migrations `php artisan migrate`.
 
 ## Build assets
-`npm run prod` or `npm run dev`
+`npm run prod` or `yarn prod`
+
+## Generate documentation
+> Suppose you are in the project directory.
+```
+./vendor/bin/openapi --format yaml --output ./swagger/swagger-doc.yaml ./swagger/swagger.php app
+```

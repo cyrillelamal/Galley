@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use OpenApi\Annotations as OA;
 
 /**
+ * @OA\Schema(
+ *     @OA\Property(property="id", type="integer", readOnly=true, example=1337)
+ * )
  * @property Collection tasks
  * @property int id
  * @property Collection listings

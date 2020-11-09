@@ -55,7 +55,7 @@ class Signup extends React.Component {
         const data = {email, password, password_confirmation}
 
         axios.post('/register', data)
-            .then(res => console.log(res))
+            .then(res => window.location.pathname = '/tasks')
             .catch(reason => console.error(reason))
     }
 
