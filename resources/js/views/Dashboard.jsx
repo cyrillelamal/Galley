@@ -74,14 +74,12 @@ class Dashboard extends React.Component {
         const {id} = task
 
         axios.delete(`/api/tasks/${id}`)
-            .then(res => {
-                    if (res.status === 200) {
-                        this.setState((state) => {
-                            return {
-                                tasks: state.tasks.filter(task => task.id !== id)
-                            }
-                        })
-                    }
+            .then(() => {
+                    this.setState(state => {
+                        return {
+                            tasks: state.tasks.filter(task => task.id !== id)
+                        }
+                    })
                 }
             )
     }
@@ -98,15 +96,13 @@ class Dashboard extends React.Component {
         const {id} = listing
 
         axios.delete(`/api/listings/${id}`)
-            .then(res => {
-                    if (res.status === 200) {
-                        this.setState((state) => {
-                            return {
-                                listings: state.listings.filter(l => l.id !== id),
-                                tasks: state.tasks.filter(({listing_id}) => listing_id !== id)
-                            }
-                        })
-                    }
+            .then(() => {
+                    this.setState((state) => {
+                        return {
+                            listings: state.listings.filter(l => l.id !== id),
+                            tasks: state.tasks.filter(({listing_id}) => listing_id !== id)
+                        }
+                    })
                 }
             )
     }
@@ -162,7 +158,7 @@ class Dashboard extends React.Component {
                 <div className="container is-fullwidth">
                     <div className="columns">
                         <div className="column is-3">
-                            <Logout />
+                            <Logout/>
                             <ListingForm addListing={this.addListing}/>
                             <nav className={this.state.removingListings
                                 ? "panel mt-2 is-danger"

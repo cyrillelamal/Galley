@@ -47,7 +47,7 @@ class ListingForm extends React.Component {
                     </p>
                 </header>
                 <div className="card-content">
-                    <form onSubmit={this.handleSubmit}>
+                    <form onSubmit={this.handleSubmit} autoComplete={"off"}>
                         <div className="field">
                             <div className="control">
                                 <input

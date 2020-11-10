@@ -59045,7 +59045,8 @@ var ListingForm = /*#__PURE__*/function (_React$Component) {
       }, "New list")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-content"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
-        onSubmit: this.handleSubmit
+        onSubmit: this.handleSubmit,
+        autoComplete: "off"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "field"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -59905,16 +59906,14 @@ var Dashboard = /*#__PURE__*/function (_React$Component) {
       var _this4 = this;
 
       var id = task.id;
-      axios__WEBPACK_IMPORTED_MODULE_3___default.a["delete"]("/api/tasks/".concat(id)).then(function (res) {
-        if (res.status === 200) {
-          _this4.setState(function (state) {
-            return {
-              tasks: state.tasks.filter(function (task) {
-                return task.id !== id;
-              })
-            };
-          });
-        }
+      axios__WEBPACK_IMPORTED_MODULE_3___default.a["delete"]("/api/tasks/".concat(id)).then(function () {
+        _this4.setState(function (state) {
+          return {
+            tasks: state.tasks.filter(function (task) {
+              return task.id !== id;
+            })
+          };
+        });
       });
     }
   }, {
@@ -59932,20 +59931,18 @@ var Dashboard = /*#__PURE__*/function (_React$Component) {
       var _this5 = this;
 
       var id = listing.id;
-      axios__WEBPACK_IMPORTED_MODULE_3___default.a["delete"]("/api/listings/".concat(id)).then(function (res) {
-        if (res.status === 200) {
-          _this5.setState(function (state) {
-            return {
-              listings: state.listings.filter(function (l) {
-                return l.id !== id;
-              }),
-              tasks: state.tasks.filter(function (_ref) {
-                var listing_id = _ref.listing_id;
-                return listing_id !== id;
-              })
-            };
-          });
-        }
+      axios__WEBPACK_IMPORTED_MODULE_3___default.a["delete"]("/api/listings/".concat(id)).then(function () {
+        _this5.setState(function (state) {
+          return {
+            listings: state.listings.filter(function (l) {
+              return l.id !== id;
+            }),
+            tasks: state.tasks.filter(function (_ref) {
+              var listing_id = _ref.listing_id;
+              return listing_id !== id;
+            })
+          };
+        });
       });
     }
   }, {
