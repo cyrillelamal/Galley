@@ -4,8 +4,12 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use OpenApi\Annotations as OA;
 
 /**
+ * @OA\Schema(
+ *     @OA\Property(property="id", type="integer", readOnly=true, example=228)
+ * )
  * @method static Task|null find($id)
  * @property User user
  * @property int id
