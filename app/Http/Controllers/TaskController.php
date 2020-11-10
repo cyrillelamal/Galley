@@ -129,7 +129,7 @@ class TaskController extends Controller
      *      response=200,
      *      description="The task data.",
      *     @OA\JsonContent(
-     *     @OA\Property(property="tasks", type="object", ref="#/components/schemas/Task")
+     *     @OA\Property(property="task", type="object", ref="#/components/schemas/Task")
      *      )
      * ),
      *     @OA\Response(
