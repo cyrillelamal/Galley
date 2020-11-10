@@ -10,10 +10,10 @@ use OpenApi\Annotations as OA;
  * @OA\Schema(
  *     @OA\Property(property="id", type="integer", readOnly=true, example=228, description="Identifier"),
  *     @OA\Property(property="body", type="string", readOnly=true, example="Foo bar", description="Content"),
- *     @OA\Property(property="expires_at", type="string", format="date-time", readOnly=true, example="2020-11-10T14:25:16+00:00", description="Content"),
- *     @OA\Property(property="user", type="object", ref="#/components/schemas/User"),
+ *     @OA\Property(property="expires_at", type="string", format="date-time", readOnly=true, example="2020-11-10T14:25:16+00:00", description="Date of expiration"),
+ *     @OA\Property(property="user", type="object", ref="#/components/schemas/User", description="The owner"),
  *     @OA\Property(property="listings", type="array", ref="#/components/schemas/User",
- *          @OA\Items(type="object", ref="#/components/schemas/Listing")
+ *          @OA\Items(type="object", ref="#/components/schemas/Listing"), description="Owner listing"
  *     )
  * )
  * @method static Task|null find($id)

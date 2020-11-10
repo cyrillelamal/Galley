@@ -3,8 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use OpenApi\Annotations as OA;
 
 /**
+ * @OA\Schema(
+ *     @OA\Property(property="id", type="integer", readOnly=true, example=228, description="Identifier"),
+ *     @OA\Property(property="name", type="string", readOnly=true, example="My meetings", description="The listing name"),
+ *     @OA\Property(property="user", type="object", ref="#/components/schemas/User", description="The owner")
+ * )
  * @method static find($listing_id)
  * @method static Listing findOrFail(int $param)
  * @property User user
