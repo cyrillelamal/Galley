@@ -24,15 +24,14 @@ class Signup extends React.Component {
 
     loadCsrfCookie() {
         axios.get('/sanctum/csrf-cookie')
+            .then(res => console.log(res))
     }
 
     handleChange({target}) {
         const {name, value} = target
 
         this.setState((state) => {
-            let newState = {
-                [name]: value
-            }
+            const newState = {[name]: value}
 
             if (state.passwordsDiffer && name !== 'email') {
                 newState.passwordsDiffer = false
@@ -55,7 +54,7 @@ class Signup extends React.Component {
         const data = {email, password, password_confirmation}
 
         axios.post('/register', data)
-            .then(res => window.location.pathname = '/tasks')
+            .then(() => window.location.pathname = '/tasks')
             .catch(reason => console.error(reason))
     }
 

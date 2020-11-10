@@ -16,17 +16,19 @@ class Logout extends React.Component {
         axios.post('/logout').then(() => {
             const {setUser} = this.context
 
-            setUser(null)
-
             this.setState({loading: false})
+
+            setUser(null)
         })
     }
 
     render() {
         if (this.state.loading) {
-            return (<Loading>
-                Bye
-            </Loading>)
+            return (
+                <Loading>
+                    Bye
+                </Loading>
+            )
         }
 
         return (

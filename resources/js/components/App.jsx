@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import Main from "./Main";
 import axios from 'axios';
 import UserContext from "../contexts/UserContext";
@@ -17,8 +17,8 @@ class App extends React.Component {
 
     loadUser() {
         axios.get('/api/reflect_user')
-            .then(res => res.data)
-            .then(({user}) => this.setState({user, loading: false}))
+            .then(res => res.data.user)
+            .then(user => this.setState({user, loading: false}))
     }
 
     componentDidMount() {
@@ -41,7 +41,7 @@ class App extends React.Component {
 
         return (
             <UserContext.Provider value={contextValue}>
-                    <Main/>
+                <Main/>
             </UserContext.Provider>
         )
     }

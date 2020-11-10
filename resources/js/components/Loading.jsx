@@ -7,7 +7,9 @@ class Loading extends React.Component {
             <section className="hero is-fullheight is-info">
                 <div className="hero-body">
                     <div className="container has-text-centered -align-center">
-                        <ReactLoading type={'spin'} color={'#fff'}/>
+                        <div className="flex-center">
+                            <ReactLoading type={'spin'} color={'#fff'}/>
+                        </div>
                         <h2 className="subtitle">
                             {this.props.children}
                         </h2>

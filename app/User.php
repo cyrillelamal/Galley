@@ -10,7 +10,8 @@ use OpenApi\Annotations as OA;
 
 /**
  * @OA\Schema(
- *     @OA\Property(property="id", type="integer", readOnly=true, example=1337)
+ *     @OA\Property(property="id", type="integer", readOnly=true, example=1337),
+ *     @OA\Property(property="email", type="string", readOnly=true, example="foo@bar.com")
  * )
  * @property Collection tasks
  * @property int id
